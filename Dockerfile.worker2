@@ -1,0 +1,38 @@
+# stage 1: start from composer
+FROM composer:2.6.5 as build
+WORKDIR /app
+
+# copy all the code
+COPY . .
+
+# run composer to update
+RUN composer update --prefer-dist --no-dev --no-interaction --ignore-platform-req=ext-http --ignore-platform-req=ext-xdebug
+
+# stage 2: get the php latest image
+FROM php:8.3 as production
+
+# update the image
+RUN apt-get update && apt-get install -y curl libpng-dev libonig-dev libxml2-dev
+
+# add necessary libraries
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# clean the apt cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# copy all code from stage 1
+COPY --from=build /app /var/www/html
+
+# move the production file to the image
+COPY .env.production .env
+
+WORKDIR /var/www/html
+# RUN a2enmod rewrite
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    chmod 777 -R /var/www/html/storage/ && \
+    chown -R www-data:www-data /var/www/
+
+ENTRYPOINT ["php", "artisan", "serve",  "--port 9000" ]
