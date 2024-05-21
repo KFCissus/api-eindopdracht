@@ -1,0 +1,13 @@
+.center-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .small-button{
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    
+  }
+ 

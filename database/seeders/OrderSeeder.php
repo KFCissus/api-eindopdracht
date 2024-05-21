@@ -16,7 +16,7 @@ class OrderSeeder extends Seeder
     {
         DB::table('Orders')->insert([
             'id' =>null,
-            'klantId' => 1
+            'userId' => 1
         ]);
     }
 }

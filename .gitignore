@@ -2,7 +2,7 @@
 /public/hot
 /public/storage
 /storage/*.key
-storage/*
+storage/dbdata/*
 /vendor
 .env
 .env.backup

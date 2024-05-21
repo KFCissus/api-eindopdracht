@@ -15,7 +15,7 @@ class OrderTable extends Migration
     {
         Schema::create('Orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('klantId')->references('id')->on('klanten');
+            $table->foreignId('userId')->references('id')->on('users');
 
         });
     }

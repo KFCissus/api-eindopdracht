@@ -14,10 +14,12 @@ class KlantSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('klanten')->insert([
+        DB::table('users')->insert([
 
             'id' =>null,
-            'name'=>'Chris'
+            'name'=>'Chris',
+            'email'=>'chris@email.com',
+            'password'=>'12345678'
         ]);
     }
 }

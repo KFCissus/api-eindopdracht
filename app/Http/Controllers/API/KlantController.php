@@ -7,10 +7,15 @@ use App\Models\artikel;
 use App\Models\Boodschaplijst;
 use App\Models\klant;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tests\CreatesApplication;
+
+use Illuminate\Support\Facades\Auth;
+
+
 
 class KlantController extends Controller
 {
@@ -21,6 +26,7 @@ class KlantController extends Controller
      */
     public function index(Request $request)
     {
+
         Log::info(
             'klant list',
             [
@@ -29,7 +35,7 @@ class KlantController extends Controller
             ]
         );
 
-        return klant::All();
+        return User::All();
 
     }
 
@@ -49,7 +55,10 @@ class KlantController extends Controller
             ]
         );
         $validator = Validator::make($request->all(), [
-            'name' => 'required'
+            'name' => 'required',
+            'email' => 'required|string|email|',
+            'password' => 'required|string|min:6'
+
 
         ]);
         if ($validator->fails()) {
@@ -63,6 +72,8 @@ class KlantController extends Controller
         } else {
 
             $name = $request['name'];
+            $email = $request['email'];
+            $password = $request['password'];
             $klant = Klant::where('name', request('name'))->first();
             if ($klant){
                 Log::error("Klant toevoegen Fout");
@@ -74,7 +85,7 @@ class KlantController extends Controller
                 return response()->json($content, 400);
             }
 
-             $newklant = Klant::Create(['name' => $name]);
+             $newklant = User::Create(['name' => $name,'email'=>$email,'password'=>$password]);
             // $newklant->save();
 
             $neworder =  Order::Create(['klantId' => $newklant['id']]);
@@ -107,7 +118,7 @@ class KlantController extends Controller
             ]
         );
 
-        return Klant::find($klant);
+        return User::find($klant);
     }
 
     /**
@@ -138,6 +149,12 @@ class KlantController extends Controller
             ]
         );
 
-        Klant::destroy($klant);
+        User::destroy($klant);
     }
+
+
+
+
+
+
 }

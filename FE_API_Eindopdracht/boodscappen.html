@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Centered Card with Bootstrap 5</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <script>
+      const api = "http://127.0.0.1:8000/api";
+
+      const getKlant = async () => {
+        var klantid = 1;
+        const response = await axios.get(api + "/Klant/1");
+        const json = await response.data;
+        console.log(json);
+        var realjason = json;
+
+        var klantNaam = document.getElementById("klantNaam");
+        klantNaam.innerText = "Klant Naam: " + realjason["name"];
+      };
+
+      deleteArticle = async (articleId) => {
+        axios.delete(api + "/Artikel/" + articleId).then((response) => {
+          console.log(`Deleted post with ID ${articleId}`);
+        });
+      };
+
+      const getList = async () => {
+        const response = await axios.get(api + "/Boodschaplijst/1");
+        const json = await response.data;
+        console.log(json);
+      };
+
+      function RemoveNode(id, data) {
+        return data.filter(function (e) {
+          return e.id !== id;
+        });
+      }
+
+      function createTable(data) {
+        var table = document.createElement("table");
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+
+        var header = table.createTHead();
+        var row = header.insertRow();
+
+        // Headers
+        var headers = ["id", "name", "price", "listId"];
+        headers.forEach(function (headerText) {
+          var th = document.createElement("th");
+          th.style.border = "1px solid #dddddd";
+          th.style.padding = "8px";
+          th.appendChild(document.createTextNode(headerText));
+          row.appendChild(th);
+        });
+
+        // Actions header spanning 2 columns
+        var actionsHeader = document.createElement("th");
+        actionsHeader.style.border = "1px solid #dddddd";
+        actionsHeader.style.padding = "8px";
+        actionsHeader.setAttribute("colspan", "2");
+        actionsHeader.style.textAlign = "center"; // Center align the text
+        actionsHeader.appendChild(document.createTextNode("Actions"));
+        row.appendChild(actionsHeader);
+
+        var tbody = document.createElement("tbody");
+        data.forEach(function (item) {
+          row = tbody.insertRow();
+          for (var key in item) {
+            var cell = row.insertCell();
+            cell.style.border = "1px solid #dddddd";
+            cell.style.padding = "8px";
+            cell.appendChild(document.createTextNode(item[key]));
+          }
+          // Delete button
+          var deleteCell = row.insertCell();
+          deleteCell.style.border = "1px solid #dddddd";
+          deleteCell.style.padding = "8px";
+          var deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.className = "btn btn-danger";
+          deleteCell.appendChild(deleteButton);
+
+          // Update button
+          var updateCell = row.insertCell();
+          updateCell.style.border = "1px solid #dddddd";
+          updateCell.style.padding = "8px";
+          var updateButton = document.createElement("button");
+          updateButton.textContent = "Update";
+          updateButton.className = "btn btn-primary";
+          updateCell.appendChild(updateButton);
+
+          // Update button click event listener
+          updateButton.addEventListener("click", function () {
+            var rowIndex = this.parentNode.parentNode.rowIndex;
+            // Handle update action here
+
+            console.log("Update button clicked for row: " + rowIndex);
+            var a = data.splice(rowIndex, 1);
+            console.log(a[0].id);
+
+            var articleId = a[0].id;
+            sessionStorage.setItem("articleId", articleId);
+            window.location.href = "update.html";
+          });
+
+          deleteButton.addEventListener("click", function () {
+            // Get the index of the row
+            var rowIndex = this.parentNode.parentNode.rowIndex;
+            // Remove the item from the data array
+            // data.splice(rowIndex - 1, 1);
+
+            // console.log(data.splice(rowIndex, 1));
+            var a = data.splice(rowIndex, 1);
+            console.log(a[0].id);
+
+            // Remove the row from the table
+            table.deleteRow(rowIndex);
+            deleteArticle(a[0].id);
+          });
+        });
+
+        table.appendChild(tbody);
+        return table;
+      }
+
+      // Add the table to the page
+
+      getKlant();
+      getList();
+    </script>
+    <h1 class="card-title" id="klantNaam"></h1>
+    <h6>
+      verander gebruiker ?
+      <a href="kiesklant.html" class="btn btn-primary">klik hier</a>
+    </h6>
+    <h2>
+      nieuwe klant aanmaken?
+      <a href="klantcreate.html" class="btn btn-primary">Klik hier</a>
+    </h2>
+
+    <div class="container center-card">
+      <div class="card" style="width: 28rem">
+        <div class="card-body">
+          <h5 class="card-title" id="lijstNaam"></h5>
+          <p class="card-text">hier kun je alle boodscappen zien</p>
+          <div id="tableContainer"></div>
+          <div id="boodscappen"></div>
+          <a href="create.html" class="btn btn-primary">maak nieuwe artikel</a>
+        </div>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn btn-primary">ga terug</a>
+
+    <!-- Bootstrap JS (optional, if you want to use Bootstrap JS components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

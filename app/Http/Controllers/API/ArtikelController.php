@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\artikel;
+use http\Message\Body;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -82,7 +83,7 @@ class ArtikelController extends Controller
      * @param  \App\Models\artikel  $artikel
      * @return \Illuminate\Http\Response
      */
-    public function show(string $artikel,Request $request)
+    public function show(artikel $artikel,Request $request)
     {
         Log::info(
             'Artikel show',
@@ -94,7 +95,7 @@ class ArtikelController extends Controller
             ]
         );
 
-        return artikel::find($artikel);
+        return $artikel;
     }
 
     /**
@@ -105,30 +106,31 @@ class ArtikelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, artikel $artikel)
-    {        Log::info(
-        'artikels update',
-        ['ip' => $request->ip(), 'oud' => $artikel, 'nieuw' => $request->all()]
-    );
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'prijs' => 'required',
-        ]);
-        if ($validator->fails()) {
-            Log::error("artikels wijzigen Fout");
-            $content = [
-                'success' => false,
-                'data'    => $request->all(),
-                'foutmelding' => 'Gewijzigde data niet correct',
-            ];
-            return response()->json($content, 400);
-        } else {
-            $content = [
-                'success' => $artikel->where('id',$request->id)->update($request->all()),
-                'data'    => $request->only(['naam', 'prijs']),
-            ];
-            return response()->json($content, 200);
-        }
+    {
+        dd("test ");
+//
+//        Log::info(
+//        'artikels update',
+//        ['ip' => $request->ip(), 'oud' => $artikel, 'nieuw' => $request->all()] );
+//
+//        $validator = Validator::make($request->all(), [
+//        ]);
+//        if ($validator->fails()) {
+//            Log::error("artikels wijzigen Fout");
+//            $content = [
+//                'success' => false,
+//                'data'    => $request->all(),
+//                'foutmelding' => 'Gewijzigde data niet correct',
+//            ];
+//            return response()->json($content, 400);
+//        } else {
+//            $content = [
+//                'success' => $artikel->update($request->all()),
+//                'data'    => $request->only(['name', 'prijs']),
+//            ];
+//
+//            return response()->json($content, 200);
+//        }
 
 
     }

@@ -7,3 +7,6 @@ rsconnect/
 .Rproj.user
 data
  .idea
+storage/*
+vendor/*
+node_modules/*

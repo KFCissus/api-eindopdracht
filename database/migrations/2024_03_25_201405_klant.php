@@ -16,6 +16,10 @@ class Klant extends Migration
         Schema::create('klanten', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('email');
+            $table->string('password');
+
+
                ; // ->onUpdate('cascade')->onDelete('cascade');
 
         });
